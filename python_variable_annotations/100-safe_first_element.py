@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+"""Module for safe execution of first element retrieval."""
+
 from typing import Sequence, Any, Optional
 
 
