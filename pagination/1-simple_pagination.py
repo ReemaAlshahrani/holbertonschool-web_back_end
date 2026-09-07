@@ -27,7 +27,6 @@ class Server:
             self.__dataset = dataset[1:]
 
         return self.__dataset
-
     def get_page(self, page: int = 1, page_size: int = 10) -> List[List]:
         """Returns the appropriate page of the dataset.
         """
@@ -41,5 +40,10 @@ class Server:
         # Retrieve the dataset
         data = self.dataset()
 
+        # Return empty list if out of bounds
+        if start >= len(data):
+            return []
+
         # Slice and return the requested portion of the dataset
         return data[start:end]
+
