@@ -31,8 +31,8 @@ class Server:
         """Returns the appropriate page of the dataset.
         """
         # Verify that both arguments are positive integers and not booleans
-        assert isinstance(page, int) and not isinstance(page, bool) and page > 0
-        assert isinstance(page_size, int) and not isinstance(page_size, bool) and page_size > 0
+        assert isinstance(page, int) and page > 0
+        assert isinstance(page_size, int) and page_size > 0
 
         # Calculate the start and end indexes for the page
         start, end = index_range(page, page_size)
