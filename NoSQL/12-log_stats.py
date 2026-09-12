@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 """ Nginx logs statistics stored in MongoDB """
 from pymongo import MongoClient
 
