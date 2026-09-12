@@ -9,7 +9,7 @@ if __name__ == "__main__":
 
     # Count and print the total number of logs in the collection
     number_of_logs = nginx_collection.count_documents({})
-    print(f"{number_of_logs} logs")
+    print("{} logs".format(number_of_logs))
 
     # Print the methods header
     print("Methods:")
@@ -20,11 +20,11 @@ if __name__ == "__main__":
     # Loop through each method and count its occurrences dynamically
     for i in methods:
         count = nginx_collection.count_documents({"method": i})
-        print(f"\tmethod {i}: {count}")
+        print("\tmethod {}: {}".format(i, count))
 
     # Count and print the number of logs matching method GET and path /status
     status_checks = nginx_collection.count_documents({
         "method": "GET", 
         "path": "/status"
     })
-    print(f"{status_checks} status check")
+    print("{} status check".format(status_checks))
