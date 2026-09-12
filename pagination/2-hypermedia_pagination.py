@@ -1,29 +1,66 @@
 #!/usr/bin/env python3
 """
-Main file
+Server class for hypermedia pagination
 """
 
+import csv
 import math
+from typing import List, Dict, Any, Tuple
 
-Server = __import__('2-hypermedia_pagination').Server
+
+def index_range(page: int, page_size: int) -> Tuple[int, int]:
+    """Return a tuple of size two containing a start index and an end index
+    corresponding to the range of indexes to return in a list for those pagination parameters.
+    """
+    start_index = (page - 1) * page_size
+    end_index = page * page_size
+    return (start_index, end_index)
+
 
 class Server:
-    def get_hyper(self, page: int = 1, page_size: int = 10):
-        # Calculate the total number of pages based on dataset length and page size
+    """Server class to paginate a database of popular baby names.
+    """
+    DATA_FILE = "Popular_Baby_Names.csv"
+
+    def __init__(self):
+        self.__dataset = None
+
+    def dataset(self) -> List[List]:
+        """Cached dataset
+        """
+        if self.__dataset is None:
+            with open(self.DATA_FILE) as f:
+                reader = csv.reader(f)
+                dataset = [row for row in reader]
+            self.__dataset = dataset[1:]
+
+        return self.__dataset
+
+    def get_page(self, page: int = 1, page_size: int = 10) -> List[List]:
+        """Get page from dataset with bounds checking
+        """
+        assert isinstance(page, int) and page > 0
+        assert isinstance(page_size, int) and page_size > 0
+        
+        start, end = index_range(page, page_size)
+        full_dataset = self.dataset()
+        
+        if start >= len(full_dataset):
+            return []
+            
+        return full_dataset[start:end]
+
+    def get_hyper(self, page: int = 1, page_size: int = 10) -> Dict[str, Any]:
+        """Returns a dictionary containing hypermedia pagination metadata.
+        """
+        data = self.get_page(page, page_size)
         total_pages = math.ceil(len(self.dataset()) / page_size)
         
-        # Retrieve the dataset items for the current page
-        data = self.get_page(page, page_size)
-        
-        # Determine the next page number, or None if the current page is the last one
         next_page = page + 1 if page < total_pages else None
-        
-        # Determine the previous page number, or None if the current page is the first one
         prev_page = page - 1 if page > 1 else None
         
-        # Return a dictionary containing all pagination metadata and dataset items
         return {
-            "page_size": page_size,
+            "page_size": len(data),
             "page": page,
             "data": data,
             "next_page": next_page,
