@@ -1,5 +1,3 @@
-import getSanFranciscoDescription from './7-get_budget_object.js';
-
 export default function getSanFranciscoDescription() {
   const year = 2017;
   const budget = {
@@ -8,6 +6,6 @@ export default function getSanFranciscoDescription() {
     capita: '$178,479',
   };
 
-  // Use template literals to interpolate variables and object properties smoothly
+  // Return the formatted string using template literals and variable interpolation
   return `As of ${year}, it was the seventh-highest income county in the United States, with a per capita personal income of ${budget.income}. As of 2015, San Francisco proper had a GDP of ${budget.gdp}, and a GDP per capita of ${budget.capita}.`;
 }
