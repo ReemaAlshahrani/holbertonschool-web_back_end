@@ -1,27 +1,29 @@
 const fs = require('fs');
 
-//Reads a CSV file synchronously and logs student statistics.
-const countStudents = (path) => {
-  let fileContent;
+// Reads a CSV database file synchronously and logs student statistics.
 
-  // 1. Attempt to read the CSV file synchronously
+const countStudents = (path) => {
+  if (!fs.existsSync(path) || !fs.statSync(path).isFile()) {
+    throw new Error('Cannot load the database');
+  }
+
+  let fileContent;
   try {
     fileContent = fs.readFileSync(path, 'utf-8');
   } catch (error) {
     throw new Error('Cannot load the database');
   }
 
-  // 2. Split content into lines and ignore empty lines
   const lines = fileContent
     .split('\n')
-    .filter((line) => line.trim().length > 0);
+    .map((line) => line.trim())
+    .filter((line) => line.length > 0);
 
   if (lines.length <= 1) {
     console.log('Number of students: 0');
     return;
   }
 
-  // 3. Remove header and group student names by field (CS / SWE)
   const studentLines = lines.slice(1);
   const students = {};
 
@@ -40,7 +42,6 @@ const countStudents = (path) => {
     }
   });
 
-  // 4. Calculate total count and log total number of students
   const totalStudents = Object.values(students).reduce(
     (acc, curr) => acc + curr.length,
     0,
@@ -48,7 +49,6 @@ const countStudents = (path) => {
 
   console.log(`Number of students: ${totalStudents}`);
 
-  // 5. Log count and firstname list for each field
   Object.entries(students).forEach(([field, names]) => {
     console.log(
       `Number of students in ${field}: ${names.length}. List: ${names.join(', ')}`,
